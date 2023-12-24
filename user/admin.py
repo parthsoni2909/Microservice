@@ -12,9 +12,9 @@ class UserAdmin(auth_admin.UserAdmin):
     add_form = UserCreationForm
     fieldsets = (
         auth_admin.UserAdmin.fieldsets
-        + (("INFO", {"fields": ("phone_number",)}),) 
+        + (("INFO", {"fields": ("role","phone_number",)}),) 
         + (("Account Verification", {"fields": ("is_verified",)}),)
     )
-    list_display = ["id","username","first_name", "last_name", "email", "phone_number"]
-    search_fields = ["id","username","first_name", "last_name", "email", "phone_number"]
+    list_display = ["id","username","first_name", "last_name", "email", "phone_number","role",]
+    search_fields = ["id","username","first_name", "last_name", "email", "phone_number","role",]
     ordering = ["-id"]
