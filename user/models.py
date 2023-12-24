@@ -10,7 +10,13 @@ from django.conf import settings
 # Create your models here.
 
 class User(AbstractUser):
+    ROLE_CHOICES = [
+        ('Admin', 'Admin'),
+        ('Manager', 'Manager'),
+        ('Employee', 'Employee'),
+    ]
     id = models.AutoField(primary_key=True)
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='Admin', null=True, blank=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique=True)

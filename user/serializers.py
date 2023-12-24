@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ('id','token','first_name', 'last_name', 'email', 'phone_number', 'password')
+        fields = ('id','token', 'role','first_name', 'last_name', 'email', 'phone_number', 'password')
     
     def get_token(self, obj):
         token = Token.objects.get_or_create(user=obj)[0]

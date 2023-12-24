@@ -9,9 +9,14 @@ import random
 from rest_framework.response import Response
 from twilio.rest import Client 
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, BasePermission
 
 # Create your views here.
+
+class IsAdminPermission(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.role == 'Admin'
+
 
 class UserRegistrationViewSet(ModelViewSet):
     """
@@ -40,6 +45,7 @@ class UserRegistrationViewSet(ModelViewSet):
             data=request.data, context={"request": request}
         )
         serializer.is_valid(raise_exception=True)
+        role = serializer.validated_data["role"]
         first_name = serializer.validated_data["first_name"]
         last_name = serializer.validated_data["last_name"]
         email = serializer.validated_data["email"]
@@ -55,7 +61,9 @@ class UserRegistrationViewSet(ModelViewSet):
             status=status.HTTP_200_OK,
         )
 
-        user = User.objects.create(first_name=first_name,
+        user = User.objects.create(
+            role=role,
+            first_name=first_name,
             last_name=last_name,
             email=email,
             phone_number=phone_number,
@@ -332,6 +340,8 @@ class UserAccountUpdateViewSet(ModelViewSet):
     """
         UpdateUserAccount/{user_id} - API for update user data.
 
+        Only Admin User role Access this API.
+
         # Sample Request Data
             {
                 "first_name": "Parth S",
@@ -349,9 +359,14 @@ class UserAccountUpdateViewSet(ModelViewSet):
                     "phone_number": 916355361115
                 }
             }
+
+        # If you have no permission to this API
+            {
+                "detail": "You do not have permission to perform this action."
+            }
     """
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsAdminPermission)
     serializer_class = UserAccountUpdateSerializer
     http_method_names = ["put"]
     queryset = User.objects.all()
@@ -377,6 +392,8 @@ class ChangePasswordViewSet(ModelViewSet):
     """
         ChangePassword/{user_id} - API for change password.
 
+        Only Admin User role Access this API.
+
         # Sample Request Data
             {
                 "old_password": "Secure@098",
@@ -400,9 +417,14 @@ class ChangePasswordViewSet(ModelViewSet):
                 "success": false,
                 "message": "New password cannot be the same as the old password."
             }
+        
+        # If you have no permission to this API
+            {
+                "detail": "You do not have permission to perform this action."
+            }
     """
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsAdminPermission)
     serializer_class = ChangePasswordsSerializer
     http_method_names = ["put"]
     queryset = User.objects.all()
