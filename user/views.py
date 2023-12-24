@@ -496,7 +496,7 @@ class PasswordResetRequestViewSet(ModelViewSet):
 
         if user:
             current_site = request.build_absolute_uri("/")
-            reset_link = f"{current_site}api/v1/users/ResetPassword/" # update you reset password page url.
+            reset_link = f"{current_site}api/v1/users/ResetPassword/" # Replace Your reset password page url.
             subject = "Password Reset Link"
             message = f"Click the following link to reset your password: {reset_link}"
             recipient_list = [email]
