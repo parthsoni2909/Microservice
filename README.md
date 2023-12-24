@@ -35,6 +35,12 @@ venv\Scripts\activate
 pip install -r requirenment.txt
 ```
 
+## Migrate the Database
+```sh
+python manage.py migrate
+```
+
+
 ## Run the Project
 ```sh
 python manage.py runserver
